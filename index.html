@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="凤凰知音合作航司淡旺季规则查询助手，快速进入国航、深航、山航和昆航官方明细。" />
+    <title>淡旺季助手 · 凤凰知音</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="./" aria-label="淡旺季助手首页">
+          <span class="brand-mark" aria-hidden="true">凤</span>
+          <span><strong>淡旺季助手</strong><small>PHOENIXMILES TOOLKIT</small></span>
+        </a>
+        <span class="header-note"><span class="status-dot" aria-hidden="true"></span>信息源自官方页面</span>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero section-shell" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">凤凰知音 · 航空奖励查询</p>
+          <h1 id="page-title">先选航司，<em>再看淡旺季。</em></h1>
+          <p class="hero-lede">集中整理国航系合作航司的官方规则入口。选择航司和季节后，直接打开对应明细页核对兑换所需里程。</p>
+          <div class="hero-meta" aria-label="服务说明">
+            <span><strong>4</strong> 家航司</span>
+            <span><strong>2</strong> 个季节</span>
+            <span><strong>官方</strong> 来源</span>
+          </div>
+        </div>
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="orbit-center">PM</div>
+          <span class="orbit-label orbit-label-top">淡季</span>
+          <span class="orbit-label orbit-label-bottom">旺季</span>
+        </div>
+      </section>
+
+      <section class="query-panel section-shell" aria-labelledby="query-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">快速查询</p>
+            <h2 id="query-title">选择你的查询条件</h2>
+          </div>
+          <span class="source-badge"><span aria-hidden="true">●</span> 官方明细页</span>
+        </div>
+        <form id="query-form" class="query-form">
+          <div class="field">
+            <label for="airline">航空公司</label>
+            <select id="airline" name="airline">
+              <option value="CA">国航 · CA</option>
+              <option value="ZH">深航 · ZH</option>
+              <option value="SC">山航 · SC</option>
+              <option value="KY">昆航 · KY</option>
+            </select>
+          </div>
+          <fieldset class="field season-field">
+            <legend>出行季节</legend>
+            <div class="segmented-control">
+              <label><input type="radio" name="season" value="light" checked /><span>淡季</span></label>
+              <label><input type="radio" name="season" value="peak" /><span>旺季</span></label>
+            </div>
+          </fieldset>
+          <button class="primary-button" type="submit"><span>查看官方明细</span><span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="query-hint" id="query-hint" role="status">当前查询：国航 · 淡季。打开官方明细页后，请以页面展示的最新规则为准。</p>
+      </section>
+
+      <section class="content-grid section-shell" aria-label="航司规则入口">
+        <div class="airline-list-wrap">
+          <div class="section-heading">
+            <div><p class="eyebrow">合作航司</p><h2>规则入口</h2></div>
+            <span class="result-count" id="result-count">4 个结果</span>
+          </div>
+          <div class="airline-list" id="airline-list"></div>
+        </div>
+        <aside class="side-card" aria-labelledby="notes-title">
+          <p class="eyebrow">使用说明</p>
+          <h2 id="notes-title">把核对放在出行前</h2>
+          <ul class="note-list">
+            <li><span>01</span><p>兑换标准会随航司、航线和舱位变化，请以官方明细为准。</p></li>
+            <li><span>02</span><p>淡季和旺季是两套规则，切换季节后再打开对应页面核对。</p></li>
+            <li><span>03</span><p>官方页面可能需要登录或选择更多条件，查询结果请及时保存。</p></li>
+          </ul>
+          <div class="source-callout"><span class="source-icon" aria-hidden="true">↗</span><div><strong>数据来源</strong><p>中国国际航空凤凰知音官网 · 运输奖励兑换标准</p></div></div>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="site-footer"><div class="section-shell"><span>凤凰知音淡旺季助手</span><span>仅作查询导航，规则以官方页面为准</span></div></footer>
+    <script src="app.js"></script>
+  </body>
+</html>
