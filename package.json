@@ -1,0 +1,30 @@
+{
+  "name": "phoenixmiles-seasonal-tool",
+  "version": "1.0.0",
+  "private": true,
+  "description": "React + shadcn 风格的凤凰知音 2026 冬季淡旺季里程查询工具。",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "import:excel": "node scripts/import-excel.mjs",
+    "check": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kongken/ca-slot.git"
+  },
+  "type": "module",
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
+    "vite": "^7.1.7",
+    "xlsx": "^0.18.5"
+  }
+}
