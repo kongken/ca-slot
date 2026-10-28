@@ -39,7 +39,7 @@ function App() {
           <div className="hero-copy">
             <Badge tone="blue">2026 冬季规则</Badge>
             <h1>把淡旺季规则，<span>查清楚。</span></h1>
-            <p>按航司、季节和航线搜索凤凰知音里程折扣。数据来自用户提供的冬季统计表，页面同时保留每家航司的官方明细入口。</p>
+            <p>按航司、季节和航线搜索凤凰知音里程折扣。页面预留冬季统计表的导入和核验流程，同时保留每家航司的官方明细入口。</p>
             <div className="hero-stats" aria-label="数据概览">
               <div><strong>{airlines.length}</strong><span>合作航司</span></div>
               <div><strong>{verifiedRows.length || '—'}</strong><span>已验证记录</span></div>

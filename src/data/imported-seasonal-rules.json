@@ -1,0 +1,7 @@
+{
+  "source": null,
+  "importedAt": null,
+  "dimensions": ["airlineCode", "airlineName", "origin", "destination", "cabin", "season", "mileage"],
+  "sheets": [],
+  "rows": []
+}

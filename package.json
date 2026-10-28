@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "import:excel": "node scripts/import-excel.mjs",
+    "inspect:excel": "node scripts/inspect-excel.mjs",
     "check": "vite build"
   },
   "repository": {

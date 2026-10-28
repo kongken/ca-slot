@@ -3,4 +3,3 @@ dist
 .env
 .DS_Store
 data/source.xlsx
-src/data/imported-seasonal-rules.json
