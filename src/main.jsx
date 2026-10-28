@@ -16,6 +16,7 @@ function App() {
     const haystack = [row.airlineName, row.origin, row.destination, row.cabin, row.period, row.tripType, row.sheet].map(text).join(' ').toLowerCase();
     return (airline === 'all' || row.airlineCode === airline) && (market === 'all' || row.market === market) && (discount === 'all' || row.discount === Number(discount)) && (!query.trim() || haystack.includes(query.trim().toLowerCase()));
   }), [airline, market, discount, query]);
+  const routeStats = useMemo(() => buildRouteStats(filteredRows), [filteredRows]);
   const selectedName = airline === 'all' ? '全部航司' : availableAirlines.find((item) => item.code === airline)?.name || '所选航司';
 
   return <div className="app-shell">
@@ -25,11 +26,39 @@ function App() {
 
       <section className="filter-card" aria-labelledby="filter-title"><div className="section-title-row"><div><p className="kicker">筛选器</p><h2 id="filter-title">找到适合你的规则</h2></div><SlidersHorizontal size={20} className="muted-icon" aria-hidden="true" /></div><div className="filter-grid"><label className="control"><span>航司</span><Select value={airline} onChange={(event) => setAirline(event.target.value)}><option value="all">全部航司</option>{availableAirlines.map((item) => <option key={item.code || item.name} value={item.code}>{item.name} · {item.code}</option>)}</Select></label><Tabs label="航区" value={market} onChange={setMarket} items={ [['all', '全部'], ['domestic', '国内'], ['international', '国际']] } /><label className="control"><span>折扣</span><Select value={discount} onChange={(event) => setDiscount(event.target.value)}><option value="all">全部折扣</option>{discountOptions.map((value) => <option key={value} value={value}>{value} 倍</option>)}</Select></label><label className="control search-control"><span>搜索航线、舱位或时间</span><span className="input-wrap"><Search size={16} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="如：北京、经济舱、2027/2" /></span></label></div><div className="filter-result" role="status"><span>当前显示：{selectedName} · {market === 'all' ? '全部航区' : market === 'domestic' ? '国内' : '国际'} · {discount === 'all' ? '全部折扣' : `${discount} 倍`}</span><strong>{filteredRows.length.toLocaleString()} 条记录</strong></div></section>
 
+      <section className="route-stats-section" aria-labelledby="route-stats-title"><div className="section-title-row"><div><p className="kicker">航线统计</p><h2 id="route-stats-title">当前筛选下的航线概览</h2></div><span className="result-caption">随筛选条件实时更新</span></div><RouteStats stats={routeStats} /></section>
       <section className="results-section" aria-labelledby="results-title"><div className="section-title-row"><div><p className="kicker">查询结果</p><h2 id="results-title">里程折扣明细</h2></div><span className="result-caption">折扣为原始表格数值，点击来源可追溯</span></div>{filteredRows.length > 0 ? <ResultTable rows={filteredRows} /> : <EmptyState query={query} />}</section>
       <section className="airlines-section" aria-labelledby="airlines-title"><div className="section-title-row"><div><p className="kicker">官方入口</p><h2 id="airlines-title">四家合作航司</h2></div></div><div className="airline-grid">{airlines.map((item) => <AirlineCard key={item.code} airline={item} />)}</div></section>
       <aside className="notice" aria-label="数据说明"><Info size={18} /><div><strong>数据说明</strong><p>已导入国内和国际两个工作表。每条记录保留来源工作表与源行号；当前 {importedSummary.invalidRows} 条记录未通过必填字段或数值校验。</p></div></aside>
     </main><footer className="footer"><div className="container"><span>凤凰知音 · 冬季里程助手</span><span>规则变更时请以官方页面为准</span></div></footer>
   </div>;
+}
+
+function buildRouteStats(rows) {
+  const routes = new Map();
+  rows.forEach((row) => {
+    const origin = text(row.origin) || '未知出发地';
+    const destination = text(row.destination) || '未知目的地';
+    const market = text(row.market) || 'unknown';
+    const key = `${market}|${origin}→${destination}`;
+    const current = routes.get(key) || { key, market, origin, destination, count: 0, airlines: new Set(), discounts: [] };
+    current.count += 1;
+    if (row.airlineName) current.airlines.add(row.airlineName);
+    if (Number.isFinite(row.discount)) current.discounts.push(row.discount);
+    routes.set(key, current);
+  });
+  const sorted = [...routes.values()].sort((a, b) => b.count - a.count || a.key.localeCompare(b.key, 'zh-CN')).map((route) => ({ ...route, airlines: [...route.airlines], minDiscount: route.discounts.length ? Math.min(...route.discounts) : null, maxDiscount: route.discounts.length ? Math.max(...route.discounts) : null }));
+  return { uniqueRoutes: sorted.length, topRoutes: sorted.slice(0, 6), routeRows: rows.length };
+}
+
+function formatDiscountRange(route) {
+  if (!route.discounts.length) return '—';
+  if (route.minDiscount === route.maxDiscount) return String(route.minDiscount);
+  return `${route.minDiscount}–${route.maxDiscount}`;
+}
+
+function RouteStats({ stats }) {
+  return <div className="route-stats-grid"><div className="route-stat-total"><span className="stat-label">涉及航线</span><strong>{stats.uniqueRoutes.toLocaleString()}</strong><small>条不同航线</small></div><div className="route-stat-total"><span className="stat-label">当前记录</span><strong>{stats.routeRows.toLocaleString()}</strong><small>条筛选结果</small></div><div className="route-ranking"><div className="ranking-heading"><span className="stat-label">高频航线</span><span className="ranking-note">按记录数</span></div>{stats.topRoutes.length ? stats.topRoutes.map((route, index) => <div className="route-rank" key={route.key}><span className="rank-number">{String(index + 1).padStart(2, '0')}</span><div className="route-rank-main"><strong>{route.origin} <span>→</span> {route.destination}</strong><small>{route.market === 'domestic' ? '国内' : route.market === 'international' ? '国际' : '其他'} · {route.airlines.join('、') || '未知航司'} · 折扣 {formatDiscountRange(route)}</small></div><b>{route.count}</b></div>) : <p className="route-empty">调整筛选条件后查看航线统计</p>}</div></div>;
 }
 
 function ResultTable({ rows }) {
